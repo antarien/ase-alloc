@@ -1,12 +1,28 @@
-# Stub CMakeLists.txt for ase-alloc
-# TODO: Implement actual build logic
-
 cmake_minimum_required(VERSION 3.20)
-project(ase-alloc VERSION 0.1.0 LANGUAGES CXX)
 
-message(STATUS "Stub: ase-alloc (not implemented yet)")
+project(ase-alloc
+    VERSION 1.0.0
+    DESCRIPTION "ASE Memory Allocation - Arena, Pool, Stack Allocators"
+    LANGUAGES CXX
+)
 
-# Placeholder target
-add_custom_target(ase-alloc_stub
-    COMMAND ${CMAKE_COMMAND} -E echo "Module ase-alloc is a stub"
+# Library (header-only)
+add_library(ase-alloc INTERFACE)
+add_library(ase::alloc ALIAS ase-alloc)
+
+target_include_directories(ase-alloc
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_compile_features(ase-alloc INTERFACE cxx_std_20)
+
+# Install
+install(TARGETS ase-alloc
+    EXPORT ase-alloc-targets
+)
+
+install(DIRECTORY include/ase
+    DESTINATION include
 )

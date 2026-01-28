@@ -2,70 +2,75 @@
 
 [![Layer](https://img.shields.io/badge/Layer-0%20Foundation-blue.svg)]()
 [![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)]()
-[![Status](https://img.shields.io/badge/Status-Planned-yellow.svg)]()
+[![Status](https://img.shields.io/badge/Status-Active-green.svg)]()
 
 > Custom memory allocators for high-performance allocation strategies
 
 Part of [ASE - Antares Simulation Engine](../../..)
 
-## Status
+## Features
 
-**Not Yet Implemented** - This module is a stub for future development.
+- **Arena Allocator**: Fast bump allocator for sequential allocations with bulk reset
 
-## Planned Features
+## Usage
 
-- **Arena Allocator**: Fast bump allocator for temporary allocations
-- **Pool Allocator**: Fixed-size block allocation for frequent small objects
-- **Stack Allocator**: LIFO allocation for frame-based memory
-- **Linear Allocator**: Sequential allocation with bulk deallocation
-- **Custom STL Allocators**: Drop-in replacements for `std::allocator`
-
-## Motivation
-
-ASE targets billions of entities in a persistent world. Standard allocators (`malloc`/`new`) have overhead and fragmentation issues at this scale. Custom allocators will:
-
-- Reduce memory fragmentation
-- Improve cache locality
-- Minimize allocation overhead
-- Enable deterministic deallocation patterns
-- Support per-frame/per-system memory budgets
-
-## Planned Usage
+### Arena Allocator
 
 ```cpp
-// Arena allocator (not yet implemented)
-#include <ase/alloc/arena.hpp>
+#include <ase/alloc/alloc.hpp>
 
 using namespace ase::alloc;
 
-// Frame-scoped allocations
-Arena frame_arena{1024 * 1024};  // 1 MB
-auto* data = frame_arena.allocate<MyStruct>();
-// ... use data ...
-frame_arena.reset();  // Free everything at once
+// Create arena with pre-allocated buffer
+char buffer[1024 * 1024];  // 1 MB
+Arena arena{buffer, sizeof(buffer)};
 
-// Pool allocator (not yet implemented)
-#include <ase/alloc/pool.hpp>
+// Allocate memory (O(1) bump pointer)
+char* str = static_cast<char*>(arena.allocate(100));
+void* data = arena.allocate_zeroed(256);  // Zero-initialized
 
-Pool<Entity, 10000> entity_pool;  // 10k entities
-Entity* e = entity_pool.allocate();
-entity_pool.deallocate(e);
+// Check capacity
+if (arena.can_allocate(1024)) {
+    void* more = arena.allocate(1024);
+}
+
+// Reset all allocations at once
+arena.reset();
 ```
+
+### With ECS Registry Context
+
+```cpp
+// Define a buffer component for ctx()
+struct ArenaBuffer {
+    char data[1024 * 1024] = {};  // 1 MB buffer
+};
+
+// Register in on_start()
+auto& buf = registry.ctx().emplace<ArenaBuffer>();
+Arena arena{buf.data, sizeof(buf.data)};
+
+// Use arena for allocations
+char* json_str = static_cast<char*>(arena.allocate(file_size));
+```
+
+## Characteristics
+
+| Feature | Arena |
+|---------|-------|
+| Allocation Time | O(1) |
+| Individual Free | No |
+| Bulk Free | Yes (reset) |
+| Memory Overhead | Zero |
+| Cache Friendly | Yes |
 
 ## Dependencies
 
 ### External
-- C++20 standard library
+- C++20 standard library (`<cstdint>`)
 
 ### Internal
 - None (Layer 0 - Foundation)
-
-## Contributing
-
-This module is planned but not yet implemented. If you need custom allocators:
-1. Consider using existing solutions (e.g., `mimalloc`, `jemalloc`) temporarily
-2. Implement allocators in this module following Layer 0 guidelines
-3. Ensure no dependencies on other ASE modules
 
 ## License
 
@@ -73,4 +78,4 @@ Proprietary - ASE Engine
 
 ---
 
-**Layer 0 Foundation** | No ASE dependencies | Planned
+**Layer 0 Foundation** | No ASE dependencies | Header-only
