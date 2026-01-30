@@ -1,28 +1,59 @@
 cmake_minimum_required(VERSION 3.20)
+project(ase-alloc VERSION 1.0.0 LANGUAGES CXX)
 
-project(ase-alloc
-    VERSION 1.0.0
-    DESCRIPTION "ASE Memory Allocation - Arena, Pool, Stack Allocators"
-    LANGUAGES CXX
-)
+#[[
+ASE FOUNDATION BUILD CONFIGURATION
 
-# Library (header-only)
-add_library(ase-alloc INTERFACE)
-add_library(ase::alloc ALIAS ase-alloc)
+@file        CMakeLists.txt
+@brief       Build configuration for ase-alloc
+@description Memory allocation - Arena, Pool, Stack allocators.
+             Header-only library for custom memory management.
 
-target_include_directories(ase-alloc
+@module      ase-alloc
+@layer       0 (Foundation)
+@created     2025-01-01
+@modified    2025-01-30
+@version     1.0.0
+
+CMAKE MODULE COMPLIANCE
+
+[ ] cmake_minimum_required(VERSION 3.20) as FIRST line
+[ ] project() with VERSION and LANGUAGES CXX
+[ ] message(STATUS) for configuration output
+[ ] add_library() with INTERFACE for header-only
+[ ] add_library(ase::{module} ALIAS ...) for namespace
+[ ] target_include_directories() with INTERFACE and generator expressions
+[ ] target_compile_features() with cxx_std_20
+[ ] NO external dependencies (Layer 0)
+[ ] include(GNUInstallDirs) for installation
+[ ] install(DIRECTORY include/ ...) for headers
+]]
+
+message(STATUS "Configuring ${PROJECT_NAME} v${PROJECT_VERSION}")
+
+#[[
+HEADER-ONLY LIBRARY
+Memory allocators: ArenaAllocator, PoolAllocator, StackAllocator.
+]]
+add_library(${PROJECT_NAME} INTERFACE)
+add_library(ase::alloc ALIAS ${PROJECT_NAME})
+
+target_include_directories(${PROJECT_NAME}
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
 
-target_compile_features(ase-alloc INTERFACE cxx_std_20)
+target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
 
-# Install
-install(TARGETS ase-alloc
-    EXPORT ase-alloc-targets
+#[[ VERBOTEN: No dependencies allowed in Layer 0! ]]
+
+include(GNUInstallDirs)
+
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-targets
 )
 
-install(DIRECTORY include/ase
-    DESTINATION include
+install(DIRECTORY include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
