@@ -65,7 +65,25 @@ message(STATUS "Configuring ${PROJECT_NAME} v${PROJECT_VERSION}")
 HEADER-ONLY LIBRARY
 Memory allocators: ArenaAllocator, PoolAllocator, StackAllocator.
 ]]
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME} INTERFACE
+    #[[
+    TYPES
+    Type aliases and constants for allocation (SSOT).
+    ]]
+    include/ase/alloc/types.hpp
+
+    #[[
+    ALLOCATORS
+    Memory allocator implementations.
+    ]]
+    include/ase/alloc/arena.hpp
+
+    #[[
+    MODULE ENTRY POINT
+    Main include file that re-exports all headers.
+    ]]
+    include/ase/alloc/alloc.hpp
+)
 add_library(ase::alloc ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
