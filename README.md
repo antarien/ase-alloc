@@ -8,6 +8,10 @@
 
 Part of [ASE - Antares Simulation Engine](../../..)
 
+## Overview
+
+The ase-alloc module provides custom memory allocators optimized for game engine workloads, replacing general-purpose heap allocation with fast, deterministic strategies. As a Layer 0 foundation library it has zero ASE dependencies and can be used by any module in the engine. Currently it offers an Arena (bump) allocator that uses a pre-allocated buffer and a simple pointer increment for O(1) allocation with zero memory overhead. The Arena is ideal for per-frame temporary allocations where many small objects are created during a single tick and then bulk-released via reset() at the end. It also serves bulk data loading scenarios such as reading JSON configuration files into a contiguous memory region managed by the ECS registry context. Future allocators may include pool allocators for fixed-size component storage, stack allocators for LIFO allocation patterns, and slab allocators for frequently created and destroyed entities. All allocators follow the principle of zero-cost abstraction — they compile to the same instructions as hand-written pointer arithmetic while providing a safe, testable API.
+
 ## Features
 
 - **Arena Allocator**: Fast bump allocator for sequential allocations with bulk reset
