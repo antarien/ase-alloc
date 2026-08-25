@@ -1,5 +1,7 @@
 # ase-alloc
 
+**Design:** DSGN_016 (AEC//MEMORY — Memory Allocation)
+
 [![Layer](https://img.shields.io/badge/Layer-0%20Foundation-blue.svg)]()
 [![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)]()
 [![Status](https://img.shields.io/badge/Status-Active-green.svg)]()

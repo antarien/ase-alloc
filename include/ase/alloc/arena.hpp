@@ -10,6 +10,7 @@
  *
  * @module      ase-alloc
  * @layer       0 (Foundation)
+ * @category    structure/memory/allocation
  * @created     2026-01-28
  * @modified    2026-01-28
  * @version     1.0.0
