@@ -39,7 +39,7 @@
 #   stable = Production ready (set manually)
 #
 # ==============================================================================
-ASE_ALLOC=00.00.15.00015
+ASE_ALLOC=00.00.16.00016
 ASE_ALLOC_NAME=Memory Allocators
 ASE_ALLOC_DESC=Pool allocators, arena allocators
 ASE_ALLOC_LAYER=0
